@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XG FAN CARD STUDIO — Photo Wall &amp; Virtual Photocards</title>
+<meta name="description" content="An unofficial, fan-made project: browse the XG photo wall, make your own virtual photocard, download and share it for free.">
+<script>
+  try {
+    if (sessionStorage.getItem('xg-ui-state-v1')) document.documentElement.classList.add('restore-session');
+  } catch (_) {}
+</script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-loading">
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true">
+  <span class="cursor-box">
+    <span class="cursor-charge" id="cursorCharge"></span>
+    <span class="cursor-hint" id="cursorHint">SCROLL TO<br>CHARGE OPACITY<b id="cursorPct">100%</b></span>
+  </span>
+  <span class="cursor-hand" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 11V5.5a1.5 1.5 0 013 0V10h1V4.5a1.5 1.5 0 013 0V10h1V6.5a1.5 1.5 0 013 0V15a6 6 0 01-6 6h-2a6 6 0 01-6-6v-2.2a1.5 1.5 0 012.6-1z"/></svg></span>
+  <span class="cursor-label" id="cursorLabel"></span>
+</div>
+
+<!-- ============ ENTRY ============ -->
+<div class="loader" id="loader">
+  <div class="loader-inner">
+    <h1 class="loader-title">
+      <span class="mask"><span class="line">XG</span></span>
+      <span class="mask"><span class="line">FAN CARD</span></span>
+    </h1>
+    <p class="loader-copy">Turn the frame you love into a card of your own.<br>XG photo wall · Virtual photocard maker · Free to download and share</p>
+    <div class="loader-actions" id="loaderActions">
+      <button class="loader-enter" id="btnEnter" type="button" data-cursor="ENTER PHOTO WALL">ENTER</button>
+      <button class="loader-quiet" id="btnSkip" type="button" data-cursor="SKIP TO WALL">SKIP TO WALL</button>
+    </div>
+    <p class="loader-pct" id="loaderPct">00%</p>
+  </div>
+  <div class="loader-foot">
+    <span>PHOTO WALL</span><span>CARD BOOTH</span><span>COLOPHON</span>
+  </div>
+</div>
+
+<!-- ============ PHOTO WALL ============ -->
+<header class="chrome" id="chrome">
+  <a class="logo" href="#" id="logo">XG<em>FAN CARD STUDIO</em></a>
+
+  <div class="view-toggle" id="viewToggle">
+    <button type="button" data-view="slider" class="is-active">SINGLE</button>
+    <button type="button" data-view="grid">GRID</button>
+    <button type="button" data-view="list">INDEX</button>
+  </div>
+
+  <nav class="nav-right">
+    <div class="nav-filters" id="filterSeries"></div>
+    <div class="nav-member" id="navMember">
+      <span class="nav-member-label">MEMBER</span>
+      <div class="nav-drop" id="memberDrop"></div>
+    </div>
+    <button class="nav-about" id="btnAbout" type="button" data-cursor="ABOUT">ABOUT</button>
+  </nav>
+</header>
+
+<main class="stage" id="stage">
+  <div class="view view-grid" id="viewGrid" aria-hidden="true"></div>
+
+  <div class="view view-slider" id="viewSlider" aria-hidden="false"></div>
+
+  <div class="view view-list" id="viewList" aria-hidden="true"></div>
+
+  <span class="index-cat" id="metaCat" aria-live="polite"></span>
+
+  <div class="strip">
+    <button class="foot-toggle strip-focus" id="toggleFocus" type="button" aria-pressed="false">FOCUS: [OFF]</button>
+    <button class="strip-upload" id="btnUploadTop" type="button">UPLOAD YOUR SHOT</button>
+  </div>
+
+  <div class="meta-rail">
+    <span class="meta meta-index" id="metaIndex">№—</span>
+    <span class="meta meta-name" id="metaName">MOVE YOUR CURSOR OVER A PHOTO</span>
+  </div>
+
+  <div class="chrome-foot">
+    <button class="foot-toggle" id="toggleGestures" type="button" aria-pressed="false">GESTURES: [OFF]</button>
+    <button class="foot-toggle foot-legal" id="btnLegal" type="button">UNOFFICIAL FAN-MADE PROJECT · COLOPHON</button>
+  </div>
+</main>
+
+<!-- ============ DIGITAL PHOTOCARD EXPERIENCE ============ -->
+<section class="booth" id="booth" aria-hidden="true">
+  <div class="experience-grid" aria-hidden="true"></div>
+  <div class="experience-scan" aria-hidden="true"></div>
+
+  <header class="booth-top experience-top">
+    <span class="booth-step" id="boothStep">01 / SCAN</span>
+    <span class="experience-brand">DIGITAL PHOTOCARD EXPERIENCE</span>
+    <button class="booth-close" id="boothClose" type="button">CLOSE ×</button>
+  </header>
+
+  <main class="experience-shell">
+    <aside class="experience-panel">
+      <div class="experience-copy">
+        <p class="experience-kicker" id="experienceKicker">XG CARD LAB / SIGNAL FOUND</p>
+        <h2 id="experienceTitle">Frame captured.</h2>
+        <p id="experienceCopy">Choose a core, tune the material, then activate the card to enter the 3D viewer.</p>
+      </div>
+
+      <section class="experience-group">
+        <div class="experience-group-head"><span>01 / STICKERS</span><small>STICKER</small></div>
+        <div class="sticker-cats" id="stickerCats"></div>
+          <div class="booth-frames" id="boothCores"></div>
+      </section>
+
+      <section class="experience-group">
+        <div class="experience-group-head"><span>02 / MATERIAL</span><small>SURFACE</small></div>
+        <div class="booth-frames" id="boothMaterials"></div>
+      </section>
+
+      <section class="experience-group">
+        <div class="experience-group-head"><span>03 / GRAPHIC LAYER</span><small>SIGNAL</small></div>
+        <div class="booth-frames" id="boothGraphics"></div>
+        <div class="opacity-pad" id="opacityPad" role="button" tabindex="0" data-cursor="CHARGE OPACITY">
+          <span class="opacity-pad-head"><i>OPACITY</i><b id="opacityValue">100%</b></span>
+          <span class="opacity-pad-track"><span class="opacity-pad-fill" id="opacityFill"></span></span>
+          <span class="opacity-pad-note" id="opacityPadNote">SELECT A LAYER ABOVE FIRST</span>
+        </div>
+      </section>
+
+      <section class="experience-group experience-identity">
+        <div class="experience-group-head"><span>04 / IDENTITY</span><small>AUTO</small></div>
+        <dl class="experience-readout">
+          <div><dt>MEMBER</dt><dd id="boothMember">—</dd></div>
+          <div><dt>CATEGORY</dt><dd id="boothCategory">—</dd></div>
+          <div><dt>GENE CODE</dt><dd id="boothGene">—</dd></div>
+          <div><dt>CARD ID</dt><dd id="boothCardId">—</dd></div>
+
+        </dl>
+      </section>
+
+      <div class="booth-actions experience-actions">
+        <button class="booth-enter liquid-morph" id="btnMake" type="button">
+          <span class="liquid-morph-bg" aria-hidden="true">
+            <span class="liquid-morph-blob"></span>
+            <span class="liquid-morph-blob"></span>
+            <span class="liquid-morph-blob"></span>
+          </span>
+          <span class="liquid-morph-label">ACTIVATE CARD</span>
+        </button>
+        <button class="booth-quiet" id="btnShare" type="button" hidden>SHARE</button>
+        <button class="booth-quiet" id="boothUpload" type="button">UPLOAD YOUR SHOT</button>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+      </div>
+    </aside>
+
+    <section class="experience-stage" id="experienceStage">
+      <div class="experience-orbit" aria-hidden="true"></div>
+      <div class="experience-card-wrap" id="experienceCardWrap">
+        <div class="booth-lanyard-static" id="boothLanyardStatic" aria-hidden="true">
+          <span>XG · XG · XG · XG · XG · XG</span>
+        </div>
+        <div class="booth-connector-static" aria-hidden="true"><span></span></div>
+        <div class="booth-frame" id="boothFrame" data-core="core" data-material="chrome" data-graphic="gene">
+          <div class="booth-face" id="boothFace">
+            <div class="booth-photo" id="boothPhoto"></div>
+            <div class="sticker-layer" id="stickerLayer" aria-hidden="true"></div>
+            <div class="card-layer-fill" id="cardLayerFill" aria-hidden="true"></div>
+
+            <img class="card-frame-image" id="cardFrameImage" alt="" aria-hidden="true" hidden>
+            <span class="booth-slot" aria-hidden="true"></span>
+
+            <span class="booth-label" id="boothLabelLeft">XG</span>
+            <span class="booth-label booth-label-right" id="boothLabelRight">№01</span>
+            <span class="booth-stamp"><i class="booth-play"></i><span id="boothStamp">UNOFFICIAL FAN MADE PROJECT</span></span>
+          </div>
+          <div class="booth-back">
+            <span class="booth-slot" aria-hidden="true"></span>
+            <div class="booth-back-inner">
+              <p class="booth-back-brand">XG / DIGITAL CARD CORE</p>
+              <p class="booth-back-meta" id="boothBackMeta">—</p>
+              <p class="booth-back-owner" id="boothBackGene">GENE CODE —</p>
+              <p class="booth-back-fine">DIGITAL PHOTOCARD EXPERIENCE<br>UNOFFICIAL FAN MADE PROJECT<br>PERSONAL &amp; NON-COMMERCIAL USE ONLY</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="viewer-controls" id="viewerControls" hidden>
+        <button type="button" id="btnFlip">FLIP</button>
+        <button type="button" id="btnEditAgain">← EDIT AGAIN</button>
+        <span>DRAG TO ROTATE · MOVE TO TILT</span>
+      </div>
+    </section>
+  </main>
+</section>
+
+<!-- ============ ABOUT / COLOPHON ============ -->
+<section class="colophon" id="colophon" aria-hidden="true">
+  <div class="colophon-top">
+    <span class="colophon-no">ABOUT / UNOFFICIAL FAN MADE PROJECT</span>
+    <button class="booth-close" id="colophonClose" type="button">CLOSE ×</button>
+  </div>
+
+  <div class="colophon-body about-body">
+    <header class="about-hero">
+      <p class="about-kicker">XG FAN CARD STUDIO</p>
+      <h2>Made by fans,<br>for the love of XG.</h2>
+      <p class="about-statement">UNOFFICIAL FAN MADE PROJECT</p>
+      <p class="about-intro">A free, non-commercial fan project for browsing XG imagery and turning the frame you love into a virtual photocard. No login, no payment, no official affiliation.</p>
+    </header>
+
+    <div class="about-grid">
+      <article class="about-card">
+        <span class="about-no">01 / ABOUT XG</span>
+        <h3>Xtraordinary Genes</h3>
+        <p>XG is a seven-member Japanese girl group formed by XGALX and based in South Korea. The group debuted with “Tippy Toes” and is known for a hip-hop and R&amp;B-inspired sound, genre-blurring releases and a global outlook.</p>
+        <p class="about-members">JURIN · CHISA · HINATA · JURIA · MAYA · COCONA · HARVEY</p>
+      </article>
+
+      <article class="about-card">
+        <span class="about-no">02 / ABOUT THIS PROJECT</span>
+        <h3>XG Fan Card Studio</h3>
+        <p>This is an independent, unofficial fan-made virtual project. It is not affiliated with, endorsed by, sponsored by or officially connected to XG, XGALX, Avex or any related rights holder.</p>
+        <p>Every feature is provided as a free fan experience: browse the photo wall, explore the grid, create a card, download it and share it for personal, non-commercial use.</p>
+      </article>
+    </div>
+
+    <dl class="colophon-list about-list">
+      <div><dt>03 OFFICIAL PROMOTIONAL IMAGES</dt><dd>Any official promotional images shown here remain the property of XGALX and the relevant rights holders. They are used for non-commercial fan browsing and personal sharing only, and will be removed upon request from the rights holder.</dd></div>
+      <div><dt>04 YOUR UPLOADS</dt><dd>Uploaded images are processed entirely inside your browser. Nothing is sent to a server and nothing is visible to other users. Please make sure you hold the rights to any image you upload, including the likeness of everyone in it.</dd></div>
+      <div><dt>05 GENERATED CARDS</dt><dd>Generated cards are for personal collections and non-commercial sharing only. Please do not sell them, use them for promotion, print them in bulk or use them in any commercial context.</dd></div>
+      <div><dt>06 NON-COMMERCIAL PROJECT</dt><dd>Nothing in this project is for sale and no paid service is offered. Any dispute or loss arising from commercial use of generated content, or from breaking a platform’s rules, is the responsibility of the user.</dd></div>
+    </dl>
+
+    <p class="colophon-foot">UNOFFICIAL FAN MADE PROJECT · NOT FOR SALE · XG FAN CARD STUDIO · ASSET COPYRIGHTS BELONG TO THEIR RESPECTIVE OWNERS</p>
+  </div>
+</section>
+
+<div class="toast" id="toast" hidden></div>
+<svg class="liquid-morph-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="liquidMorphGoo" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo"/>
+      <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+    </filter>
+  </defs>
+</svg>
+<script src="assets/vendor/three.min.js"></script>
+<script src="lanyard-card.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+
+
+
+
